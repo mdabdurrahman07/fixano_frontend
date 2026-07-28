@@ -3,7 +3,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { Search, ShieldCheck, Star, ChevronDown } from "lucide-react";
+import { Search, ShieldCheck,ChevronDown } from "lucide-react";
 import Badge from "@/components/shared/Badge";
 
 export function HeroSection() {
