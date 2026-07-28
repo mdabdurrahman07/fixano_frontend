@@ -1,8 +1,13 @@
 import { Button } from "@/components/ui/button";
 import React from "react";
+import { HeroSection } from "./_sections/Hero";
 
 const publicHome = () => {
-  return <div>This is public home page <Button>Click me</Button></div>;
+  return (
+    <div>
+      <HeroSection />
+    </div>
+  );
 };
 
 export default publicHome;

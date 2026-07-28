@@ -16,6 +16,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import { Menu, Wrench } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 interface User {
   id: string;
@@ -30,6 +31,7 @@ interface NavbarProps {
 }
 
 const navLinks = [
+  { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
   { href: "/technicians", label: "Technicians" },
   { href: "#how-it-works", label: "How it works" },
@@ -66,6 +68,9 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
     onLogout?.();
   };
 
+  const pathname = usePathname();
+  console.log(pathname);
+
   return (
     <nav className="sticky top-0 z-50 bg-background border-b border-border">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -85,7 +90,7 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
               key={link.href}
               href={link.href}
               className={
-                link.href === "/services"
+                link.href === pathname
                   ? "text-emerald-600 font-semibold border-b-2 border-emerald-600 pb-1"
                   : "text-slate-600 hover:text-emerald-600 transition-colors"
               }
