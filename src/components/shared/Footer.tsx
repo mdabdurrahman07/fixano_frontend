@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { Wrench, Send } from "lucide-react";
+import { useState } from "react";
 
 export function Footer() {
+  const year = useState(() => new Date().getFullYear())[0];
   return (
     <div className="bg-[#E0E3E5] text-[#1E293B] border-t border-slate-200">
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-14 grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -106,7 +108,7 @@ export function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 border-t border-[#A9ABAD] text-center text-md text-[#1E293B]">
-        © {new Date().getFullYear()} Fixano Home Services. All rights reserved.
+        © {year} Fixano Home Services. All rights reserved.
       </div>
     </div>
   );

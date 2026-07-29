@@ -2,13 +2,15 @@ import React from "react";
 import { HeroSection } from "./_sections/Hero";
 import { HowItWorksSection } from "./_sections/HowItWorks";
 import Cta from "./_sections/Cta";
+import { ServiceSection } from "./_sections/Service";
 
 const publicHome = () => {
   return (
-    <div>
+    <div className="space-y-2">
       <HeroSection />
-      <HowItWorksSection/>
-      <Cta/>
+      <HowItWorksSection />
+      <ServiceSection />
+      <Cta />
     </div>
   );
 };

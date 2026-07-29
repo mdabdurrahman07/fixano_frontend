@@ -104,7 +104,7 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
           {!user ? (
             <Link
               href="/login"
-              className="rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all hover:bg-emerald-700 active:scale-95"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-medium text-sm transition-all shadow-md active:scale-95"
             >
               Login
             </Link>
