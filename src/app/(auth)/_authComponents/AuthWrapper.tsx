@@ -1,4 +1,10 @@
-import { BadgeCheck, CircleDollarSign, ClipboardClock } from "lucide-react";
+import {
+  ArrowLeft,
+  BadgeCheck,
+  CircleDollarSign,
+  ClipboardClock,
+} from "lucide-react";
+import Link from "next/link";
 import React, { ReactNode } from "react";
 
 export function AuthWrapper({ children }: { children: ReactNode }) {
@@ -13,6 +19,11 @@ export function AuthWrapper({ children }: { children: ReactNode }) {
       {/* Left Column: Visual/Marketing (Hidden on Mobile) */}
       <section className="hidden lg:flex w-1/2 relative flex-col justify-center px-20 z-10">
         <div className="max-w-md">
+          <span className="font-extrabold text-lg leading-[1.1] flex items-center justify-center mb-2 w-12 h-12 bg-[#006948] text-white rounded-full">
+            <Link href={"/"}>
+              <ArrowLeft />
+            </Link>
+          </span>
           <div className="mb-12">
             <span className="font-extrabold text-[48px] leading-[1.1] text-[#006948] block mb-2 tracking-tight">
               Fixano
