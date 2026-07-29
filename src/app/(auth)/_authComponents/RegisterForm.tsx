@@ -9,6 +9,7 @@ import React, {
 import { useForm, type Resolver, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { RegisterInput, registerSchema } from "@/lib/schemas/zod.authSchema";
 import { regFormPrevState } from "@/app/types/types";
 import { registerAction } from "../_authActions/authAction";
@@ -28,6 +29,7 @@ const initialState: regFormPrevState = {
 };
 
 export function RegisterForm() {
+  const router = useRouter();
   const [state, formAction, isPending] = useActionState(
     registerAction,
     initialState,
@@ -69,7 +71,10 @@ export function RegisterForm() {
     if (!state.message) return;
 
     if (state.success) {
-      toast.success(state.message);
+      toast.success(state.message || "Registration Successful");
+      if (state.redirectTo) {
+        router.replace(state.redirectTo);
+      }
     } else {
       toast.error(state.message);
       if (state.errors) {
@@ -83,7 +88,7 @@ export function RegisterForm() {
         });
       }
     }
-  }, [state, setError]);
+  }, [state, setError, router]);
 
   const onSubmit: SubmitHandler<RegisterInput> = (data) => {
     startTransition(() => {

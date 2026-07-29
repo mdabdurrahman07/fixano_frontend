@@ -2,6 +2,7 @@ export type loginFormPrevState = {
   success: boolean;
   message: string;
   errors?: Record<string, string[]>;
+  redirectTo?: string;
   data?: {
     accessToken: string;
     refreshToken: string;
@@ -40,4 +41,5 @@ export type regFormPrevState = {
   message: string;
   data?: regData;
   errors?: Record<string, string[]>;
+  redirectTo?: string;
 };

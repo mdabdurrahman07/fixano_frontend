@@ -9,6 +9,7 @@ import React, {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { loginFormPrevState } from "@/app/types/types";
 import { LoginAction } from "../_authActions/authAction";
 import { loginInput, loginSchema } from "@/lib/schemas/zod.authSchema";
@@ -20,6 +21,7 @@ const initialState: loginFormPrevState = {
 };
 
 export function LoginForm() {
+  const router = useRouter();
   const [state, formAction, isPending] = useActionState(
     LoginAction,
     initialState,
@@ -46,6 +48,9 @@ export function LoginForm() {
 
     if (state.success) {
       toast.success(state.message);
+      if (state.redirectTo) {
+        router.replace(state.redirectTo);
+      }
     } else {
       toast.error(state.message);
 
@@ -60,7 +65,7 @@ export function LoginForm() {
         });
       }
     }
-  }, [state, setError]);
+  }, [state, setError, router]);
 
   const onSubmit = (data: loginInput) => {
     startTransition(() => {

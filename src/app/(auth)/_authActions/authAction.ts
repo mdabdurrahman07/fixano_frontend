@@ -9,7 +9,6 @@ import {
 } from "@/lib/schemas/zod.authSchema";
 import { cookies } from "next/headers";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { redirect } from "next/navigation";
 export const LoginAction = async (
   formPrevState: loginFormPrevState,
   formData: loginInput,
@@ -67,16 +66,21 @@ export const LoginAction = async (
   });
 
   const decodedToken = jwt.decode(result.data.accessToken) as JwtPayload;
+  const redirectTo =
+    decodedToken.role === "CUSTOMER"
+      ? "/"
+      : decodedToken.role === "TECHNICIAN"
+        ? "/technician-dashboard"
+        : decodedToken.role === "ADMIN"
+          ? "/admin-dashboard"
+          : "/";
 
-  if (decodedToken.role === "CUSTOMER") {
-    redirect("/");
-  } else if (decodedToken.role === "TECHNICIAN") {
-    redirect("/technician-dashboard");
-  } else if (decodedToken.role === "ADMIN") {
-    redirect("/admin-dashboard");
-  }
-
-  return result;
+  return {
+    success: true,
+    message: result.message || "Logged in successfully.",
+    redirectTo,
+    data: result.data,
+  };
 };
 
 export const registerAction = async (
@@ -126,9 +130,11 @@ export const registerAction = async (
     };
   }
 
-  if (result.success) {
-    redirect("/login", "replace");
-  }
-
-  return result;
+  return {
+    success: true,
+    statusCode: 201,
+    message: result.message || "Registration successful. Please log in.",
+    data: result.data,
+    redirectTo: "/login",
+  };
 };
