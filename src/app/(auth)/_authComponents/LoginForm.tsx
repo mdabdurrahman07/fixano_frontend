@@ -64,10 +64,7 @@ export function LoginForm() {
 
   const onSubmit = (data: loginInput) => {
     startTransition(() => {
-      const formData = new FormData();
-      formData.append("email", data.email);
-      formData.append("password", data.password);
-      formAction(formData);
+      formAction(data);
     });
   };
 

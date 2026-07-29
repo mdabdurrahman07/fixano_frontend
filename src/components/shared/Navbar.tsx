@@ -69,7 +69,6 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
   };
 
   const pathname = usePathname();
-  console.log(pathname);
 
   return (
     <nav className="sticky top-0 z-50 bg-background border-b border-border">
