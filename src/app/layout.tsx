@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -41,6 +42,7 @@ export default function RootLayout({
       className={`${plusJakartaSans.variable} ${inter.variable} scroll-smooth`}
     >
       <body className="bg-background text-foreground font-sans antialiased selection:bg-emerald-500 selection:text-white min-h-screen flex flex-col">
+        <Toaster position="top-center" richColors />
         {children}
       </body>
     </html>
