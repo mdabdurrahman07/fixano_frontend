@@ -1,8 +1,9 @@
-import React, { ReactNode } from 'react';
+import { BadgeCheck, CircleDollarSign, ClipboardClock } from "lucide-react";
+import React, { ReactNode } from "react";
 
-const Register = ({ children }: { children: ReactNode}) => {
-    return (
-      <main className="flex min-h-screen relative overflow-hidden bg-[#f7f9fb] text-[#191c1e] font-sans">
+export function AuthWrapper({ children }: { children: ReactNode }) {
+  return (
+    <main className="flex min-h-screen relative overflow-hidden bg-[#f7f9fb] text-[#191c1e] font-sans">
       {/* Background Decoration */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-20%] right-[-10%] w-150 h-150 bg-[#006948]/5 rounded-full blur-[120px]" />
@@ -25,13 +26,16 @@ const Register = ({ children }: { children: ReactNode}) => {
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-[#68dba9] flex items-center justify-center shrink-0">
                 <span className="material-symbols-outlined text-[#006948]">
-                  verified
+                  <BadgeCheck />
                 </span>
               </div>
               <div>
-                <h3 className="text-[18px] font-bold mb-1">Vetted Professionals</h3>
+                <h3 className="text-[18px] font-bold mb-1">
+                  Vetted Professionals
+                </h3>
                 <p className="text-[#3d4a42] text-sm">
-                  Every technician undergoes a rigorous background check and skill assessment.
+                  Every technician undergoes a rigorous background check and
+                  skill assessment.
                 </p>
               </div>
             </div>
@@ -39,13 +43,14 @@ const Register = ({ children }: { children: ReactNode}) => {
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-[#d8e3fb] flex items-center justify-center shrink-0">
                 <span className="material-symbols-outlined text-[#545f73]">
-                  schedule
+                  <ClipboardClock />
                 </span>
               </div>
               <div>
                 <h3 className="text-[18px] font-bold mb-1">Instant Booking</h3>
                 <p className="text-[#3d4a42] text-sm">
-                  Schedule a service in under 60 seconds with real-time technician availability.
+                  Schedule a service in under 60 seconds with real-time
+                  technician availability.
                 </p>
               </div>
             </div>
@@ -53,13 +58,16 @@ const Register = ({ children }: { children: ReactNode}) => {
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl bg-[#d1fae5] flex items-center justify-center shrink-0">
                 <span className="material-symbols-outlined text-[#065f46]">
-                  payments
+                  <CircleDollarSign />
                 </span>
               </div>
               <div>
-                <h3 className="text-[18px] font-bold mb-1">Transparent Pricing</h3>
+                <h3 className="text-[18px] font-bold mb-1">
+                  Transparent Pricing
+                </h3>
                 <p className="text-[#3d4a42] text-sm">
-                  Know exactly what you&apos;ll pay before you book. No hidden fees, ever.
+                  Know exactly what you&apos;ll pay before you book. No hidden
+                  fees, ever.
                 </p>
               </div>
             </div>
@@ -118,7 +126,5 @@ const Register = ({ children }: { children: ReactNode}) => {
         </div>
       </section>
     </main>
-    );
-};
-
-export default Register;
+  );
+}

@@ -1,112 +1,181 @@
-// "use client";
-// import { loginInput, loginSchema } from "@/lib/schemas/zod.authSchema";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import React, { useActionState, useEffect, useTransition } from "react";
-// import { useForm } from "react-hook-form";
-// import { LoginAction } from "../_authActions/authAction";
-// import { toast } from "sonner";
+"use client";
 
-// const LoginForm = () => {
-//   const formInitialState = {
-//     success: false,
-//     message: "",
-//   };
-//   const [state, formAction, isPending] = useActionState(
-//     LoginAction,
-//     formInitialState,
-//   );
-//   const [isTransitioning, startTransition] = useTransition();
-//   const {
-//     register,
-//     handleSubmit,
-//     setError,
-//     formState: { errors },
-//   } = useForm<loginInput>({
-//     resolver: zodResolver(loginSchema),
-//     defaultValues: {
-//       email: "",
-//       password: "",
-//     },
-//   });
+import React, {
+  useActionState,
+  useTransition,
+  useEffect,
+  useState,
+} from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { loginFormPrevState } from "@/app/types/types";
+import { LoginAction } from "../_authActions/authAction";
+import { loginInput, loginSchema } from "@/lib/schemas/zod.authSchema";
+import { ArrowRight, Eye, EyeOff, Loader } from "lucide-react";
 
-//   // toast
-//   useEffect(() => {
-//     if (!state.message) return;
+const initialState: loginFormPrevState = {
+  success: false,
+  message: "",
+};
 
-//     if (state.success) {
-//       toast.success(state.message);
-//       // redirect
-//     } else {
-//       toast.error(state.message);
-//     }
-//   }, [state, setError]);
+export function LoginForm() {
+  const [state, formAction, isPending] = useActionState(
+    LoginAction,
+    initialState,
+  );
+  const [isTransitioning, startTransition] = useTransition();
+  const [showPassword, setShowPassword] = useState(false);
 
-//   //   form submit
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<loginInput>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-//   const onSubmit = (data: loginInput) => {
-//     startTransition(() => {
-//       const formData = new FormData();
-//       formData.append("email", data.email);
-//       formData.append("password", data.password);
-//       formAction(formData);
-//     });
-//   };
 
-//   const isLoading = isPending || isTransitioning;
+  useEffect(() => {
+    if (!state.message) return;
 
-//   return (
-//     <div className="login-box max-w-sm mx-auto p-6 bg-white rounded-lg shadow-md border border-gray-100">
-//       <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-//         Login
-//       </h2>
+    if (state.success) {
+      toast.success(state.message);
+    } else {
+      toast.error(state.message);
 
-//       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-//         <div className="user-box">
-//           <label className="block text-sm font-medium text-gray-700 mb-1">
-//             Email
-//           </label>
-//           <input
-//             {...register("email")}
-//             type="text"
-//             disabled={isLoading}
-//             className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-//               errors.email ? "border-red-500" : "border-gray-300"
-//             }`}
-//           />
-//           {errors.email && (
-//             <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>
-//           )}
-//         </div>
+      if (state.errors) {
+        Object.entries(state.errors).forEach(([key, messages]) => {
+          if (messages?.[0]) {
+            setError(key as keyof loginInput, {
+              type: "server",
+              message: messages[0],
+            });
+          }
+        });
+      }
+    }
+  }, [state, setError]);
 
-//         <div className="user-box">
-//           <label className="block text-sm font-medium text-gray-700 mb-1">
-//             Password
-//           </label>
-//           <input
-//             {...register("password")}
-//             type="password"
-//             disabled={isLoading}
-//             className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-//               errors.password ? "border-red-500" : "border-gray-300"
-//             }`}
-//           />
-//           {errors.password && (
-//             <p className="mt-1 text-xs text-red-500">
-//               {errors.password.message}
-//             </p>
-//           )}
-//         </div>
+  const onSubmit = (data: loginInput) => {
+    startTransition(() => {
+      const formData = new FormData();
+      formData.append("email", data.email);
+      formData.append("password", data.password);
+      formAction(formData);
+    });
+  };
 
-//         <button
-//           type="submit"
-//           disabled={isLoading}
-//           className="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-//         >
-//           {isLoading ? "Submitting..." : "Submit"}
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
+  const isLoading = isPending || isTransitioning;
 
-// export default LoginForm;
+  return (
+    <div className="bg-white/80 backdrop-blur-md border border-white/20 rounded-2xl shadow-sm p-8 md:p-10">
+      <div className="mb-8">
+        <h1 className="text-[32px] font-bold text-[#191c1e] mb-2 leading-tight">
+          Welcome back
+        </h1>
+        <p className="text-[#3d4a42] text-base">
+          Sign in to access your account dashboard.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        {/* Email Field */}
+        <div>
+          <div className="relative">
+            <input
+              {...register("email")}
+              id="email"
+              type="email"
+              disabled={isLoading}
+              placeholder=" "
+              className={`peer block w-full px-4 pt-6 pb-2 bg-[#f2f4f6] border-0 border-b-2 ${
+                errors.email
+                  ? "border-red-500"
+                  : "border-[#bccac0] focus:border-[#006948]"
+              } focus:ring-0 transition-all rounded-t-xl text-[#191c1e] disabled:opacity-50`}
+            />
+            <label
+              htmlFor="email"
+              className="absolute left-4 top-4 text-[#3d4a42] text-sm font-semibold pointer-events-none transition-all duration-200 peer-focus:-translate-y-3 peer-focus:scale-85 peer-focus:text-[#006948] peer-[:not(:placeholder-shown)]:-translate-y-3 peer-[:not(:placeholder-shown)]:scale-85 peer-[:not(:placeholder-shown)]:text-[#006948]"
+            >
+              Email Address
+            </label>
+          </div>
+          {errors.email && (
+            <p className="mt-1.5 text-xs text-red-600 font-medium">
+              {errors.email.message}
+            </p>
+          )}
+        </div>
+
+        {/* Password Field */}
+        <div>
+          <div className="relative">
+            <input
+              {...register("password")}
+              id="password"
+              type={showPassword ? "text" : "password"}
+              disabled={isLoading}
+              placeholder=" "
+              className={`peer block w-full px-4 pt-6 pb-2 bg-[#f2f4f6] border-0 border-b-2 ${
+                errors.password
+                  ? "border-red-500"
+                  : "border-[#bccac0] focus:border-[#006948]"
+              } focus:ring-0 transition-all rounded-t-xl text-[#191c1e] disabled:opacity-50`}
+            />
+            <label
+              htmlFor="password"
+              className="absolute left-4 top-4 text-[#3d4a42] text-sm font-semibold pointer-events-none transition-all duration-200 peer-focus:-translate-y-3 peer-focus:scale-85 peer-focus:text-[#006948] peer-[:not(:placeholder-shown)]:-translate-y-3 peer-[:not(:placeholder-shown)]:scale-85 peer-[:not(:placeholder-shown)]:text-[#006948]"
+            >
+              Password
+            </label>
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-5 text-[#3d4a42] hover:text-[#006948] transition-colors"
+            >
+              <span className="material-symbols-outlined">
+                {showPassword ? <Eye /> : <EyeOff />}
+              </span>
+            </button>
+          </div>
+          {errors.password && (
+            <p className="mt-1.5 text-xs text-red-600 font-medium">
+              {errors.password.message}
+            </p>
+          )}
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full bg-[#006948] text-white py-4 rounded-xl font-semibold text-sm shadow-sm hover:shadow-lg hover:bg-[#00855d] transition-all duration-300 active:scale-[0.97] flex items-center justify-center gap-2 disabled:opacity-60"
+        >
+          <span>{isLoading ? "Logging in..." : "Log in"}</span>
+          <span className="material-symbols-outlined text-[20px]">
+            {isLoading ? <Loader className="animate-spin" /> : <ArrowRight />}
+          </span>
+        </button>
+      </form>
+
+      <div className="mt-8 text-center">
+        <p className="text-[#3d4a42] text-sm">
+          Don&apos;t have an account?
+          <a
+            href="/register"
+            className="text-[#006948] font-bold hover:underline ml-1"
+          >
+            Sign up
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+}
