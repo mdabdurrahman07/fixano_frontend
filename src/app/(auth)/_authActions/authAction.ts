@@ -72,7 +72,7 @@ export const LoginAction = async (
   const decodedToken = jwt.decode(result.data.accessToken) as JwtPayload;
   const redirectTo =
     decodedToken.role === "CUSTOMER"
-      ? "/"
+      ? "/user-dashboard"
       : decodedToken.role === "TECHNICIAN"
         ? "/technician-dashboard"
         : decodedToken.role === "ADMIN"

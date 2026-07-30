@@ -1,19 +1,26 @@
+/* eslint-disable react-hooks/refs */
 "use client";
 
-import { useEffect } from "react";
-import { useAuthStore, AuthUser } from "@/store/auth.store";
+import { useRef, type ReactNode } from "react";
+import { createAuthStore, AuthStoreContext, type AuthUser } from "@/store/auth.store";
 
 interface Props {
   user: AuthUser | null;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function AuthProvider({ user, children }: Props) {
-  const setUser = useAuthStore((state) => state.setUser);
+  // createStore runs synchronously before any render
+  // so Zustand is populated before the first paint
+  const storeRef = useRef<ReturnType<typeof createAuthStore>>(null);
 
-  useEffect(() => {
-    setUser(user);
-  }, [user, setUser]);
+  if (!storeRef.current) {
+    storeRef.current = createAuthStore(user); // initialized with server user
+  }
 
-  return <>{children}</>;
+  return (
+    <AuthStoreContext.Provider value={storeRef.current}>
+      {children}
+    </AuthStoreContext.Provider>
+  );
 }

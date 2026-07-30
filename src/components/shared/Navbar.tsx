@@ -31,7 +31,10 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { user, logout } = useAuthStore();
+  const { user, logout } = {
+  user: useAuthStore((s) => s.user),
+  logout: useAuthStore((s) => s.logout),
+};
 
   const getDashboardUrl = () => {
     if (!user) return "/";
@@ -41,7 +44,7 @@ export default function Navbar() {
       case "TECHNICIAN":
         return "/technician-dashboard";
       default:
-        return "/dashboard";
+        return "/user-dashboard";
     }
   };
 
