@@ -43,3 +43,5 @@ export type regFormPrevState = {
   errors?: Record<string, string[]>;
   redirectTo?: string;
 };
+
+export type UserRole = "CUSTOMER" | "TECHNICIAN" | "ADMIN";
