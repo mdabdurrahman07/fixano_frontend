@@ -38,7 +38,7 @@ export function TechniciansGrid({
   return (
     <motion.div
       layout
-      className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 auto-rows-max"
+      className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 auto-rows-max"
     >
       {technicians.map((technician, index) => (
         <TechnicianCard
