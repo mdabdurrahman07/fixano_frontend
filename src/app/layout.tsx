@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 import { Toaster } from "sonner";
+import AuthProvider from "@/components/providers/AuthProvider";
+import { getServerUser } from "@/lib/auth/getServerUser";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -31,7 +34,7 @@ export const metadata: Metadata = {
   ],
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -42,9 +45,21 @@ export default async function RootLayout({
       className={`${plusJakartaSans.variable} ${inter.variable} scroll-smooth`}
     >
       <body className="bg-background text-foreground font-sans antialiased selection:bg-emerald-500 selection:text-white min-h-screen flex flex-col">
-        <Toaster position="top-center" richColors />
-        {children}
+        <Suspense fallback={null}>
+          <AuthBootstrap>{children}</AuthBootstrap>
+        </Suspense>
       </body>
     </html>
+  );
+}
+
+async function AuthBootstrap({ children }: { children: React.ReactNode }) {
+  const user = await getServerUser();
+
+  return (
+    <AuthProvider user={user}>
+      <Toaster position="top-center" richColors />
+      {children}
+    </AuthProvider>
   );
 }

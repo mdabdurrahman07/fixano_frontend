@@ -15,6 +15,7 @@ import { loginFormPrevState } from "@/app/types/types";
 import { LoginAction } from "../_authActions/authAction";
 import { loginInput, loginSchema } from "@/lib/schemas/zod.authSchema";
 import { ArrowRight, Eye, EyeOff, Loader } from "lucide-react";
+import { useAuthStore } from "@/store/auth.store";
 
 const initialState: loginFormPrevState = {
   success: false,
@@ -23,6 +24,7 @@ const initialState: loginFormPrevState = {
 
 export function LoginForm() {
   const router = useRouter();
+  const setUser = useAuthStore((s) => s.setUser);
   const [state, formAction, isPending] = useActionState(
     LoginAction,
     initialState,
@@ -45,7 +47,6 @@ export function LoginForm() {
     },
   });
 
-
   useEffect(() => {
     if (!hasMountedRef.current) {
       hasMountedRef.current = true;
@@ -62,8 +63,14 @@ export function LoginForm() {
 
     if (state.success) {
       toast.success(state.message);
+      if (state.user) {
+        setUser(state.user);
+      }
       if (state.redirectTo) {
-        router.replace(state.redirectTo);
+        startTransition(() => {
+          router.refresh();
+          router.replace(state.redirectTo!);
+        });
       }
     } else {
       toast.error(state.message);
@@ -79,7 +86,16 @@ export function LoginForm() {
         });
       }
     }
-  }, [state.message, state.success, state.redirectTo, state.errors, setError, router]);
+  }, [
+    state.message,
+    state.success,
+    state.redirectTo,
+    state.errors,
+    state.user,
+    setError,
+    router,
+    setUser,
+  ]);
 
   const onSubmit = (data: loginInput) => {
     startTransition(() => {

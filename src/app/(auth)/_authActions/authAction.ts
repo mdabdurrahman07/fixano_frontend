@@ -83,7 +83,7 @@ export const LoginAction = async (
     success: true,
     message: result.message || "Logged in successfully.",
     redirectTo,
-    data: result.data,
+    data:result,
     user: {
       id: decodedToken.id as string,
       name: decodedToken.name as string,

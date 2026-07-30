@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/refs */
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { createAuthStore, AuthStoreContext, type AuthUser } from "@/store/auth.store";
 
 interface Props {
@@ -17,6 +17,10 @@ export default function AuthProvider({ user, children }: Props) {
   if (!storeRef.current) {
     storeRef.current = createAuthStore(user); // initialized with server user
   }
+
+  useEffect(() => {
+    storeRef.current?.getState().setUser(user ?? null);
+  }, [user]);
 
   return (
     <AuthStoreContext.Provider value={storeRef.current}>
