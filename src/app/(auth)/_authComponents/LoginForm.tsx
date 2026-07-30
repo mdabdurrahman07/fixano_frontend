@@ -4,6 +4,7 @@ import React, {
   useActionState,
   useTransition,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { useForm } from "react-hook-form";
@@ -28,6 +29,8 @@ export function LoginForm() {
   );
   const [isTransitioning, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
+  const hasMountedRef = useRef(false);
+  const processedToastKeyRef = useRef<string | null>(null);
 
   const {
     register,
@@ -44,7 +47,18 @@ export function LoginForm() {
 
 
   useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      return;
+    }
+
     if (!state.message) return;
+
+    const toastKey = `${state.success ? "success" : "error"}:${state.message}:${state.redirectTo ?? ""}`;
+    if (processedToastKeyRef.current === toastKey) return;
+
+    processedToastKeyRef.current = toastKey;
+    toast.dismiss();
 
     if (state.success) {
       toast.success(state.message);
@@ -65,7 +79,7 @@ export function LoginForm() {
         });
       }
     }
-  }, [state, setError, router]);
+  }, [state.message, state.success, state.redirectTo, state.errors, setError, router]);
 
   const onSubmit = (data: loginInput) => {
     startTransition(() => {
@@ -104,7 +118,7 @@ export function LoginForm() {
             />
             <label
               htmlFor="email"
-              className="absolute left-4 top-4 text-[#3d4a42] text-sm font-semibold pointer-events-none transition-all duration-200 peer-focus:-translate-y-3 peer-focus:scale-85 peer-focus:text-[#006948] peer-[:not(:placeholder-shown)]:-translate-y-3 peer-[:not(:placeholder-shown)]:scale-85 peer-[:not(:placeholder-shown)]:text-[#006948]"
+              className="absolute left-4 top-4 text-[#3d4a42] text-sm font-semibold pointer-events-none transition-all duration-200 peer-focus:-translate-y-3 peer-focus:scale-85 peer-focus:text-[#006948] peer-not-placeholder-shown:-translate-y-3 peer-not-placeholder-shown:scale-85 peer-not-placeholder-shown:text-[#006948]"
             >
               Email Address
             </label>
@@ -133,7 +147,7 @@ export function LoginForm() {
             />
             <label
               htmlFor="password"
-              className="absolute left-4 top-4 text-[#3d4a42] text-sm font-semibold pointer-events-none transition-all duration-200 peer-focus:-translate-y-3 peer-focus:scale-85 peer-focus:text-[#006948] peer-[:not(:placeholder-shown)]:-translate-y-3 peer-[:not(:placeholder-shown)]:scale-85 peer-[:not(:placeholder-shown)]:text-[#006948]"
+              className="absolute left-4 top-4 text-[#3d4a42] text-sm font-semibold pointer-events-none transition-all duration-200 peer-focus:-translate-y-3 peer-focus:scale-85 peer-focus:text-[#006948] peer-not-placeholder-shown:-translate-y-3 peer-not-placeholder-shown:scale-85 peer-not-placeholder-shown:text-[#006948]"
             >
               Password
             </label>

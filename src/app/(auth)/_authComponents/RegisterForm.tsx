@@ -4,6 +4,7 @@ import React, {
   useActionState,
   useTransition,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { useForm, type Resolver, type SubmitHandler } from "react-hook-form";
@@ -36,6 +37,8 @@ export function RegisterForm() {
   );
   const [isTransitioning, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
+  const hasMountedRef = useRef(false);
+  const processedToastKeyRef = useRef<string | null>(null);
   const [activeRole, setActiveRole] = useState<"CUSTOMER" | "TECHNICIAN">(
     "CUSTOMER",
   );
@@ -68,7 +71,18 @@ export function RegisterForm() {
   };
 
   useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      return;
+    }
+
     if (!state.message) return;
+
+    const toastKey = `${state.success ? "success" : "error"}:${state.message}:${state.redirectTo ?? ""}`;
+    if (processedToastKeyRef.current === toastKey) return;
+
+    processedToastKeyRef.current = toastKey;
+    toast.dismiss();
 
     if (state.success) {
       toast.success(state.message || "Registration Successful");
@@ -88,7 +102,7 @@ export function RegisterForm() {
         });
       }
     }
-  }, [state, setError, router]);
+  }, [state.message, state.success, state.redirectTo, state.errors, setError, router]);
 
   const onSubmit: SubmitHandler<RegisterInput> = (data) => {
     startTransition(() => {

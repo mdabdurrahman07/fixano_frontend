@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
+import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,23 +12,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
 import { Menu, Wrench } from "lucide-react";
-import { usePathname } from "next/navigation";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: "USER" | "ADMIN" | "AUTHOR";
-}
-
-interface NavbarProps {
-  user?: User;
-  onLogout?: () => void;
-}
+import { useAuthStore } from "@/store/auth.store";
+import { logoutAction } from "@/app/(auth)/_authActions/authAction";
+import { toast } from "sonner";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -37,20 +25,23 @@ const navLinks = [
   { href: "#how-it-works", label: "How it works" },
 ];
 
-export default function Navbar({ user, onLogout }: NavbarProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function Navbar() {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const { user, logout } = useAuthStore();
 
   const getDashboardUrl = () => {
     if (!user) return "/";
-
     switch (user.role) {
       case "ADMIN":
-        return "/dashboard-admin";
-      case "AUTHOR":
-        return "/dashboard-author";
+        return "/admin-dashboard";
+      case "TECHNICIAN":
+        return "/technician-dashboard";
       default:
-        return "/dashboard-user";
+        return "/dashboard";
     }
   };
 
@@ -62,13 +53,15 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
       .toUpperCase()
       .slice(0, 2);
 
-  const handleLogout = () => {
-    setIsOpen(false);
+  const handleLogout = async () => {
+    setDropdownOpen(false);
     setMobileOpen(false);
-    onLogout?.();
+    await logoutAction(); // deletes httpOnly cookies server-side
+    logout(); // clears Zustand store
+    router.push("/");
+    toast.success("Logged Out Successfully");
+    router.refresh(); // re-runs layout → getServerUser() returns null
   };
-
-  const pathname = usePathname();
 
   return (
     <nav className="sticky top-0 z-50 bg-background border-b border-border">
@@ -82,14 +75,14 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
           <span>Fixano</span>
         </Link>
 
-        {/* Desktop Nav */}
+        {/* Desktop Nav Links */}
         <div className="hidden md:flex items-center gap-6 text-sm font-medium">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={
-                link.href === pathname
+                pathname === link.href
                   ? "text-emerald-600 font-semibold border-b-2 border-emerald-600 pb-1"
                   : "text-slate-600 hover:text-emerald-600 transition-colors"
               }
@@ -99,7 +92,7 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
           ))}
         </div>
 
-        {/* Desktop Right */}
+        {/* Desktop Right — auth state */}
         <div className="hidden md:flex items-center">
           {!user ? (
             <Link
@@ -109,17 +102,20 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
               Login
             </Link>
           ) : (
-            <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+            <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
               <DropdownMenuTrigger asChild>
-                <button className="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-semibold text-primary-foreground transition-opacity hover:opacity-80">
+                <button className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 font-semibold text-white transition-opacity hover:opacity-80">
                   {getInitials(user.name)}
                 </button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuContent align="end" className="w-56 bg-white">
                 <DropdownMenuLabel className="flex flex-col gap-1">
                   <p className="font-semibold">{user.name}</p>
                   <p className="text-xs text-muted-foreground">{user.email}</p>
+                  <p className="text-xs text-emerald-600 font-medium capitalize">
+                    {user.role.toLowerCase()}
+                  </p>
                 </DropdownMenuLabel>
 
                 <DropdownMenuSeparator />
@@ -132,7 +128,7 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
 
                 <DropdownMenuItem
                   onClick={handleLogout}
-                  className="text-red-600 focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-950"
+                  className="text-red-600 focus:bg-red-50 focus:text-red-600"
                 >
                   Logout
                 </DropdownMenuItem>
@@ -161,7 +157,7 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
                     className={
-                      link.href === "/services"
+                      pathname === link.href
                         ? "font-semibold text-emerald-600"
                         : "text-slate-600 hover:text-emerald-600 transition-colors"
                     }
@@ -175,19 +171,24 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
                 {user ? (
                   <>
                     <div className="mb-5 flex items-center gap-3">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary font-semibold text-primary-foreground">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-600 font-semibold text-white">
                         {getInitials(user.name)}
                       </div>
-
                       <div>
                         <p className="font-semibold">{user.name}</p>
                         <p className="text-sm text-muted-foreground">
                           {user.email}
                         </p>
+                        <p className="text-xs text-emerald-600 font-medium capitalize">
+                          {user.role.toLowerCase()}
+                        </p>
                       </div>
                     </div>
 
-                    <Button asChild className="mb-3 w-full">
+                    <Button
+                      asChild
+                      className="mb-3 w-full bg-emerald-600 hover:bg-emerald-700"
+                    >
                       <Link
                         href={getDashboardUrl()}
                         onClick={() => setMobileOpen(false)}

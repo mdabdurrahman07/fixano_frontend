@@ -1,3 +1,5 @@
+import { AuthUser } from "@/store/auth.store";
+
 export type loginFormPrevState = {
   success: boolean;
   message: string;
@@ -7,6 +9,7 @@ export type loginFormPrevState = {
     accessToken: string;
     refreshToken: string;
   };
+  user?: AuthUser
 };
 
 export type TechnicianDetails = {

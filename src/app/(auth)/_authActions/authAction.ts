@@ -1,6 +1,10 @@
 "use server";
 
-import { loginFormPrevState, regFormPrevState } from "@/app/types/types";
+import {
+  loginFormPrevState,
+  regFormPrevState,
+  UserRole,
+} from "@/app/types/types";
 import {
   loginSchema,
   registerSchema,
@@ -80,6 +84,12 @@ export const LoginAction = async (
     message: result.message || "Logged in successfully.",
     redirectTo,
     data: result.data,
+    user: {
+      id: decodedToken.id as string,
+      name: decodedToken.name as string,
+      email: decodedToken.email as string,
+      role: decodedToken.role as UserRole,
+    },
   };
 };
 
@@ -137,4 +147,10 @@ export const registerAction = async (
     data: result.data,
     redirectTo: "/login",
   };
+};
+
+export const logoutAction = async () => {
+  const cookieStore = await cookies();
+  cookieStore.delete("accessToken");
+  cookieStore.delete("refreshToken");
 };

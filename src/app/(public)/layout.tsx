@@ -1,5 +1,5 @@
 import { Footer } from "@/components/shared/Footer";
-import Navbar from "@/components/shared/Navbar";
+import NavbarServer from "@/components/shared/NavbarServer/NavbarServer";
 
 
 const PublicLayout = ({
@@ -10,7 +10,7 @@ const PublicLayout = ({
   return (
     <div className="min-h-screen">
       <header>
-        <Navbar />
+      <NavbarServer/>
       </header>
       
      
