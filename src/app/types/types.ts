@@ -97,6 +97,11 @@ export interface ServiceQuery {
 
 // Technicians related type and interface
 
+export interface TechnicianUser {
+  avatarUrl: string;
+  name: string;
+}
+
 export interface TechnicianReview {
   id: string;
   rating: number;
@@ -145,6 +150,7 @@ export interface Technician {
   reviews: TechnicianReview[];
   availabilities: TechnicianAvailability[];
   services: TechnicianService[];
+  user: TechnicianUser;
 }
 
 export interface TechniciansResponse {
