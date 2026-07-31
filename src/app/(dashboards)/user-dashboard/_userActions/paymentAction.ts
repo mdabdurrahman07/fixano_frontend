@@ -1,8 +1,12 @@
 "use server";
-
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export const getMyBookings = async () => {
+export const paymentAction = async (
+  bookingId: string,
+  prevState: unknown,
+  _formData: FormData,
+) => {
   const url = process.env.BACKEND_API_URL;
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
@@ -15,12 +19,19 @@ export const getMyBookings = async () => {
     };
   }
 
-  const response = await fetch(`${url}/bookings`, {
+  const response = await fetch(`${url}/payment/checkout/${bookingId}`, {
+    method: "POST",
     headers: { Cookie: `accessToken=${accessToken}` },
-    cache:"reload"
   });
 
   const result = await response.json();
 
-  return result;
+  if (result.success && result.data.url) {
+    redirect(result.data.url);
+  }
+
+  return {
+    success: false,
+    message: result.message ?? "Payment initiation failed",
+  };
 };

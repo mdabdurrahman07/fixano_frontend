@@ -1,3 +1,4 @@
+"use server"
 import { cookies } from "next/headers";
 
 export async function getBookingDetails(bookingId: string) {
@@ -13,11 +14,6 @@ export async function getBookingDetails(bookingId: string) {
   }
   const response = await fetch(`${url}/bookings/${bookingId}`, {
     headers: { Cookie: `accessToken=${accessToken}` },
-    cache: "force-cache",
-    next: {
-      revalidate: 60 * 60 * 24, //1day
-      tags: ["mySingleBooking"],
-    },
   });
 
   const result = await response.json();

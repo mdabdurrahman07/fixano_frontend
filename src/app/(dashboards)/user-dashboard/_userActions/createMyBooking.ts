@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import {
@@ -99,7 +99,7 @@ export async function createBookingAction(
     const resData = await res.json();
     createdBookingId = resData.data.id;
 
-    revalidateTag("myBookings", {expire: 0});
+    // revalidateTag("myBookings", {expire: 0});
   } catch (err) {
     console.error("Booking fetch error:", err);
     return {
@@ -107,6 +107,8 @@ export async function createBookingAction(
       message: "A network error occurred. Please try again.",
     };
   }
+
+  revalidatePath("/user-dashboard/createBooking");
 
   redirect(`/user-dashboard/createBooking?bookingId=${createdBookingId}`);
 }

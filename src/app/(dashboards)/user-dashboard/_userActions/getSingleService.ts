@@ -1,3 +1,4 @@
+"use server"
 export async function getService(serviceId: string) {
   const url = process.env.BACKEND_API_URL;
   const response = await fetch(`${url}/services/${serviceId}`, {

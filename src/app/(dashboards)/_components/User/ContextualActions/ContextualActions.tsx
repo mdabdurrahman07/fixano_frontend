@@ -13,12 +13,12 @@ export function ContextualActions({ booking }: ContextualActionsProps) {
   switch (booking.status) {
     case "ACCEPTED":
       return (
-        // <Link href={`/user-dashboard/createBooking/${booking.id}`}>
+        <Link href={`/user-dashboard/payment/${booking.id}`}>
         <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors cursor-pointer">
           <CreditCard className="w-3.5 h-3.5" />
           Pay Now
         </button>
-        // </Link>
+         </Link>
       );
     case "PAID":
       return (
