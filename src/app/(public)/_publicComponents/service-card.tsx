@@ -142,7 +142,7 @@ export function ServiceCard({
 
         {/* Book */}
         <Link
-          href={`/services/${service.id}`}
+          href={`/user-dashboard/createBooking/${service.id}`}
           className="block w-full"
         >
           <button
