@@ -13,6 +13,11 @@ export async function createBookingAction(
   prevState: FormState,
   formData: FormData,
 ): Promise<FormState> {
+  // Guard: if formData is empty (initial render fire), do nothing
+  if (!formData.get("technicianId")) {
+    return prevState;
+  }
+
   const url = process.env.BACKEND_API_URL;
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
@@ -46,10 +51,11 @@ export async function createBookingAction(
     serviceId: rawData.serviceId,
     scheduledAt: rawData.scheduledAt,
     address: rawData.address,
-    notes: rawData.notes,
+    notes: rawData.notes || undefined,
   });
 
   if (!validated.success) {
+    console.log("Zod errors:", validated.error.flatten().fieldErrors);
     return {
       success: false,
       errors: validated.error.flatten().fieldErrors,
@@ -64,6 +70,8 @@ export async function createBookingAction(
     };
   }
 
+  const scheduledAtUtc = new Date(validated.data.scheduledAt).toISOString();
+
   let createdBookingId = "";
 
   try {
@@ -71,9 +79,12 @@ export async function createBookingAction(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`, // Don't forget to send the token
+        Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify(validated.data),
+      body: JSON.stringify({
+        ...validated.data,
+        scheduledAt: scheduledAtUtc, // send UTC to backend/Prisma
+      }),
     });
 
     if (!res.ok) {
@@ -88,14 +99,14 @@ export async function createBookingAction(
     const resData = await res.json();
     createdBookingId = resData.data.id;
 
-    // Revalidate cache
-    revalidateTag("myBookings", {expire:0});
+    revalidateTag("myBookings", {expire: 0});
   } catch (err) {
+    console.error("Booking fetch error:", err);
     return {
       success: false,
       message: "A network error occurred. Please try again.",
     };
   }
 
-  redirect(`/createBooking?bookingId=${createdBookingId}`);
+  redirect(`/user-dashboard/createBooking?bookingId=${createdBookingId}`);
 }

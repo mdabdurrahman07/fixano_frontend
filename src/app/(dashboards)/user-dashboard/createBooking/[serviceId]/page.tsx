@@ -1,9 +1,13 @@
+import { Suspense } from "react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import BookingForm from "@/app/(dashboards)/_components/User/BookingForm/BookingForm";
 import { getService } from "../../_userActions/getSingleService";
 import { getTechnician } from "../../_userActions/getSingleTechnician";
+import { BookingFormSkeleton } from "@/app/(dashboards)/_components/User/BookingFormSkeleton/BookingFormSkeleton";
 
 type Props = {
   params: Promise<{ serviceId: string }>;
@@ -11,6 +15,20 @@ type Props = {
 
 export default async function ServiceBookingPage({ params }: Props) {
   const { serviceId } = await params;
+
+  return (
+    <div className="container mx-auto p-6 max-w-4xl">
+      <h1 className="text-2xl font-bold text-slate-900 mb-6">
+        Complete Your Booking
+      </h1>
+      <Suspense fallback={<BookingFormSkeleton />}>
+        <BookingDataLoader serviceId={serviceId} />
+      </Suspense>
+    </div>
+  );
+}
+
+async function BookingDataLoader({ serviceId }: { serviceId: string }) {
   const response = await getService(serviceId);
 
   if (!response?.success || !response.data) {
@@ -30,14 +48,8 @@ export default async function ServiceBookingPage({ params }: Props) {
     );
   }
 
-  const technician = await getTechnician(response.data.technicianId);
+  const technicianResponse = await getTechnician(response.data.technicianId);
+  const technician = technicianResponse?.data ?? technicianResponse;
 
-  return (
-    <div className="container mx-auto p-6 max-w-4xl">
-      <h1 className="text-2xl font-bold text-slate-900 mb-6">
-        Complete Your Booking
-      </h1>
-      <BookingForm service={response.data} technician={technician}/>
-    </div>
-  );
+  return <BookingForm service={response.data} technician={technician} />;
 }

@@ -1,24 +1,23 @@
 import { TechnicianAvailability } from "../_types/types";
 
 export function isTimeWithinAvailability(
-  scheduledAtStr: string,
+  scheduledAt: string,
   availabilities: TechnicianAvailability[],
 ): boolean {
-  if (!availabilities || availabilities.length === 0) return false;
+  if (!scheduledAt || availabilities.length === 0) return false;
 
-  const date = new Date(scheduledAtStr);
-  if (isNaN(date.getTime())) return false;
+  // scheduledAt is "2026-07-09T21:35:00" — local time, no Z suffix.
+  // Parse the day-of-week and time directly from the string to avoid UTC conversion.
+  const localDate = new Date(scheduledAt);
+  const dayOfWeek = localDate.getDay(); // 0=Sun ... 6=Sat (local)
 
-  const dayOfWeek = date.getDay(); // 0 = Sun, 1 = Mon ...
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  const selectedTime = `${hours}:${minutes}`;
+  // Extract HH:MM directly from the string — no timezone math.
+  const timePart = scheduledAt.slice(11, 16); // "21:35"
 
   return availabilities.some((a) => {
+    if (a.dayOfWeek !== dayOfWeek) return false;
     return (
-      a.dayOfWeek === dayOfWeek &&
-      selectedTime >= a.startTime &&
-      selectedTime <= a.endTime
+      timePart >= a.startTime.slice(0, 5) && timePart <= a.endTime.slice(0, 5)
     );
   });
 }

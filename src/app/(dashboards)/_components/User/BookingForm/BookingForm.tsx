@@ -1,12 +1,14 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Card,
   CardContent,
@@ -14,7 +16,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { AlertCircle, CheckCircle2, CreditCard, Clock } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle2,
+  CreditCard,
+  Clock,
+  User,
+} from "lucide-react";
 import {
   FormState,
   ServiceData,
@@ -47,10 +55,28 @@ export default function BookingForm({
     createBookingAction,
     initialState,
   );
+  const [scheduledAtIso, setScheduledAtIso] = useState<string>("");
 
   const availabilities = service.technician?.availabilities || [];
 
-  // Card view on success
+  useEffect(() => {
+    if (state.message) {
+      if (state.success) {
+        toast.success("Success!", { description: state.message });
+      } else {
+        toast.error("Booking Failed", { description: state.message });
+      }
+    }
+  }, [state]);
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawVal = e.target.value;
+    setScheduledAtIso(rawVal ? `${rawVal}:00` : "");
+  };
+
+  const techName = technician?.user?.name || "Assigned Specialist";
+  const techAvatar = technician?.user?.avatarUrl || "";
+
   if (state.success && state.booking) {
     return (
       <Card className="max-w-xl mx-auto shadow-md border-emerald-200 bg-emerald-50/20">
@@ -65,16 +91,29 @@ export default function BookingForm({
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-lg border bg-white p-4 space-y-3 text-sm">
+            <div className="flex items-center justify-between border-b pb-3">
+              <span className="text-muted-foreground">Technician</span>
+              <div className="flex items-center gap-2">
+                <Avatar className="h-7 w-7">
+                  <AvatarImage src={techAvatar} alt={techName} />
+                  <AvatarFallback>
+                    <User className="w-3.5 h-3.5" />
+                  </AvatarFallback>
+                </Avatar>
+                <span className="font-medium text-slate-900">{techName}</span>
+              </div>
+            </div>
             <div className="flex justify-between border-b pb-2">
               <span className="text-muted-foreground">Service</span>
-              <span className="font-medium text-slate-900">
-                {service.title}
-              </span>
+              <span className="font-medium text-slate-900">{service.title}</span>
             </div>
             <div className="flex justify-between border-b pb-2">
               <span className="text-muted-foreground">Date & Time</span>
               <span className="font-medium text-slate-900">
-                {new Date(state.booking.scheduledAt).toLocaleString()}
+                {new Date(state.booking.scheduledAt).toLocaleString([], {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
               </span>
             </div>
             <div className="flex justify-between border-b pb-2">
@@ -91,7 +130,7 @@ export default function BookingForm({
 
           <Button
             className="w-full bg-emerald-600 hover:bg-emerald-700 text-white gap-2 h-11 text-base"
-            onClick={() => alert("Redirecting to payment payment gateway...")}
+            onClick={() => toast.info("Redirecting to payment gateway...")}
           >
             <CreditCard className="h-5 w-5" />
             Proceed to Payment (${service.price})
@@ -112,10 +151,30 @@ export default function BookingForm({
 
   return (
     <Card className="max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle>{service.title}</CardTitle>
-        <CardDescription>{service.description}</CardDescription>
-        <div className="flex items-center gap-4 text-sm font-medium text-slate-700 pt-2">
+      <CardHeader className="space-y-4">
+        <div className="flex items-center gap-3 p-3 rounded-lg border bg-slate-50/80">
+          <Avatar className="h-12 w-12 border">
+            <AvatarImage src={techAvatar} alt={techName} />
+            <AvatarFallback className="bg-slate-200">
+              <User className="h-6 w-6 text-slate-500" />
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Assigned Specialist
+            </p>
+            <h3 className="text-base font-semibold text-slate-900">{techName}</h3>
+          </div>
+        </div>
+
+        <div>
+          <CardTitle>{service.title}</CardTitle>
+          <CardDescription className="mt-1">
+            {service.description}
+          </CardDescription>
+        </div>
+
+        <div className="flex items-center gap-4 text-sm font-medium text-slate-700 pt-1">
           <span>Duration: {service.durationMinutes} mins</span>
           <span>•</span>
           <span className="text-emerald-600 font-semibold text-base">
@@ -123,6 +182,7 @@ export default function BookingForm({
           </span>
         </div>
       </CardHeader>
+
       <CardContent>
         <div className="mb-6 p-4 rounded-lg bg-slate-50 border text-xs text-slate-600 space-y-1">
           <span className="font-semibold text-slate-800 block mb-1">
@@ -152,25 +212,23 @@ export default function BookingForm({
         )}
 
         <form action={formAction} className="space-y-4">
-          <input
-            type="hidden"
-            name="technicianId"
-            value={service.technicianId}
-          />
+          <input type="hidden" name="technicianId" value={service.technicianId} />
           <input type="hidden" name="serviceId" value={service.id} />
           <input
             type="hidden"
             name="availabilitiesJson"
             value={JSON.stringify(availabilities)}
           />
+          <input type="hidden" name="scheduledAt" value={scheduledAtIso} />
 
           <div className="space-y-2">
-            <Label htmlFor="scheduledAt">Select Schedule Date & Time</Label>
-            <Input
-              id="scheduledAt"
-              name="scheduledAt"
+            <Label htmlFor="scheduledAtPicker">Select Schedule Date & Time</Label>
+            <input
+              id="scheduledAtPicker"
               type="datetime-local"
+              onChange={handleDateChange}
               disabled={availabilities.length === 0}
+              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
             />
             {state.errors?.scheduledAt && (
               <p className="text-xs text-destructive">

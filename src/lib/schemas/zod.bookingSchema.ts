@@ -4,11 +4,15 @@ import z from "zod";
 
 export function createBookingSchema(availabilities: TechnicianAvailability[]) {
   return z.object({
-    technicianId: z.string().uuid("Invalid technician ID"),
-    serviceId: z.string().uuid("Invalid service ID"),
+    technicianId: z.string().uuid(),
+    serviceId: z.string().uuid(),
     scheduledAt: z
       .string()
       .min(1, "Please select a date and time")
+      .refine(
+        (val) => !isNaN(Date.parse(val)),
+        "Invalid ISO date format. Please re-select the date and time."
+      )
       .refine(
         (val) => isTimeWithinAvailability(val, availabilities),
         "The selected date/time falls outside the technician's working hours."
