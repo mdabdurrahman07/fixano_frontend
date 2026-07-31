@@ -17,7 +17,7 @@ export const getMyBookings = async () => {
 
   const response = await fetch(`${url}/bookings`, {
     headers: { Cookie: `accessToken=${accessToken}` },
-    cache:"reload"
+    cache:"force-cache"
   });
 
   const result = await response.json();
