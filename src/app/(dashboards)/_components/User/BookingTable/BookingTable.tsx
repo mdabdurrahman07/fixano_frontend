@@ -1,5 +1,5 @@
 import React from "react";
-import { Star, MoreVertical } from "lucide-react";
+import { Star} from "lucide-react";
 import { Booking } from "@/app/types/types";
 import { BookingStatusBadge } from "../BookingStatusBadge/BookingStatusBadge";
 import { ContextualActions } from "../ContextualActions/ContextualActions";
@@ -127,9 +127,9 @@ export function BookingsTable({ bookings }: BookingsTableProps) {
                   <td className="px-6 py-4 whitespace-nowrap text-right">
                     <div className="flex items-center justify-end gap-2">
                       <ContextualActions booking={booking} />
-                      <button className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
+                      {/* <button className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
                         <MoreVertical className="w-4 h-4" />
-                      </button>
+                      </button> */}
                     </div>
                   </td>
                 </tr>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User as UserIcon, LogOut } from "lucide-react"; // Fallback icons for the shell
+import { User as UserIcon, LogOut, Home } from "lucide-react"; // Fallback icons for the shell
 import { getRoutesByRole } from "../../config/dashboard-routes";
 import { useAuthStore } from "@/store/auth.store";
 import { logoutAction } from "@/app/(auth)/_authActions/authAction";
@@ -71,9 +71,17 @@ export default function DashboardNav() {
         </nav>
 
         <div className="px-6 mt-auto">
+          <Link href={"/"}>
           <button
+            className="w-full h-12 bg-[#006948] border border-[#006948]/30 hover:bg-[#006948]/40 transition-colors rounded-xl flex items-center justify-center gap-2 text-[#85f8c4] font-['Inter'] text-[14px] font-semibold"
+          >
+            <Home size={16} />
+            Home
+          </button>
+          </Link>
+           <button
             onClick={handleLogout}
-            className="w-full h-12 bg-[#006948]/20 border border-[#006948]/30 hover:bg-[#006948]/40 transition-colors rounded-xl flex items-center justify-center gap-2 text-[#85f8c4] font-['Inter'] text-[14px] font-semibold"
+            className="mt-3.5 w-full h-12 bg-[#006948]/20 border border-[#006948]/30 hover:bg-[#006948]/40 transition-colors rounded-xl flex items-center justify-center gap-2 text-[#85f8c4] font-['Inter'] text-[14px] font-semibold"
           >
             <LogOut size={16} />
             Sign Out
