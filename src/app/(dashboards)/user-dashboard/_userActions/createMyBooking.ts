@@ -1,12 +1,13 @@
 "use server";
 
 import { revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import {
   FormState,
   TechnicianAvailability,
 } from "../createBooking/_types/types";
 import { createBookingSchema } from "@/lib/schemas/zod.bookingSchema";
-import { cookies } from "next/headers";
 
 export async function createBookingAction(
   prevState: FormState,
@@ -15,6 +16,7 @@ export async function createBookingAction(
   const url = process.env.BACKEND_API_URL;
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
+
   const rawData = {
     technicianId: formData.get("technicianId") as string,
     serviceId: formData.get("serviceId") as string,
@@ -30,12 +32,14 @@ export async function createBookingAction(
   } catch {
     availabilities = [];
   }
+
   if (availabilities.length === 0) {
     return {
       success: false,
       message: "This technician is currently not taking any bookings.",
     };
   }
+
   const schema = createBookingSchema(availabilities);
   const validated = schema.safeParse({
     technicianId: rawData.technicianId,
@@ -60,10 +64,15 @@ export async function createBookingAction(
     };
   }
 
+  let createdBookingId = "";
+
   try {
     const res = await fetch(`${url}/bookings`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`, // Don't forget to send the token
+      },
       body: JSON.stringify(validated.data),
     });
 
@@ -77,18 +86,16 @@ export async function createBookingAction(
     }
 
     const resData = await res.json();
-    
-    revalidateTag("myBookings", { expire: 0 });
+    createdBookingId = resData.data.id;
 
-    return {
-      success: true,
-      message: "Booking created successfully!",
-      booking: resData.data,
-    };
-  } catch {
+    // Revalidate cache
+    revalidateTag("myBookings", {expire:0});
+  } catch (err) {
     return {
       success: false,
       message: "A network error occurred. Please try again.",
     };
   }
+
+  redirect(`/createBooking?bookingId=${createdBookingId}`);
 }

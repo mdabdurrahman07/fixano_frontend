@@ -25,7 +25,7 @@ export interface SingleServiceResponse {
   success: boolean;
   statusCode: number;
   message: string;
-  data: ServiceData;
+  data?: ServiceData;
 }
 
 export interface CreateBookingPayload {
