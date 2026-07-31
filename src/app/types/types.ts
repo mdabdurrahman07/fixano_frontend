@@ -40,7 +40,6 @@ export type regFormPrevState = {
 // Role types
 export type UserRole = "CUSTOMER" | "TECHNICIAN" | "ADMIN";
 
-
 // Services
 export interface ServiceCategory {
   id: string;
@@ -162,11 +161,7 @@ export interface TechniciansResponse {
 
 export interface TechnicianQuery {
   searchTerm?: string;
-  sortby?:
-    | "createdAt"
-    | "avgRating"
-    | "yearsExperience"
-    | "hourlyRate";
+  sortby?: "createdAt" | "avgRating" | "yearsExperience" | "hourlyRate";
   sortOrder?: "asc" | "desc";
   isVerified?: boolean;
 }
@@ -183,3 +178,77 @@ export type TechnicianDetails = {
   updatedAt: string;
   userId?: string;
 };
+
+// booking types
+
+export type BookingStatus =
+  | "REQUESTED"
+  | "ACCEPTED"
+  | "DECLINED"
+  | "PAID"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "CANCELLED";
+
+export interface Technician {
+  id: string;
+  bio: string;
+  yearsExperience: number;
+  hourlyRate: string;
+  avgRating: number;
+  totalReviews: number;
+  isVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+}
+
+export interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  phone: string;
+  avatarUrl: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Service {
+  id: string;
+  title: string;
+  description: string;
+  price: string;
+  durationMinutes: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  technicianId: string;
+  categoryId: string;
+}
+
+export interface Booking {
+  id: string;
+  status: BookingStatus;
+  scheduledAt: string;
+  address: string;
+  notes: string;
+  totalAmount: string;
+  createdAt: string;
+  updatedAt: string;
+  customerId: string;
+  technicianId: string;
+  serviceId: string;
+  technician: Technician;
+  customer: Customer;
+  service: Service;
+  reviews: unknown[];
+}
+
+export interface MyBookingResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: Booking[];
+}
