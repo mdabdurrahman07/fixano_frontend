@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-export const getReview = async (bookingId: string) => {
+export const getReview = async () => {
   const url = process.env.BACKEND_API_URL;
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
@@ -13,13 +13,13 @@ export const getReview = async (bookingId: string) => {
       message: "User not logged in",
     };
   }
-  const response = await fetch(`${url}/review/${bookingId}`, {
+  const response = await fetch(`${url}/review`, {
     headers: { Cookie: `accessToken=${accessToken}` },
-    cache:"force-cache",
-    next:{
-        revalidate: 3600,
-        tags:["myReviews"]
-    }
+    cache: "force-cache",
+    next: {
+      revalidate: 3600,
+      tags: ["myReviews"],
+    },
   });
 
   const result = await response.json();

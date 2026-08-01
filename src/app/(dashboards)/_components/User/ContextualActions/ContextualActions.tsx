@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { CreditCard, Star, ShieldAlert, X } from "lucide-react";
+import { CreditCard, Star, ShieldAlert, X, CheckCheck } from "lucide-react";
 import { Booking } from "@/app/types/types";
 import Link from "next/link";
 
@@ -14,13 +14,21 @@ export function ContextualActions({ booking }: ContextualActionsProps) {
     case "ACCEPTED":
       return (
         <Link href={`/user-dashboard/payment/${booking.id}`}>
-        <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors cursor-pointer">
-          <CreditCard className="w-3.5 h-3.5" />
-          Pay Now
-        </button>
-         </Link>
+          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors cursor-pointer">
+            <CreditCard className="w-3.5 h-3.5" />
+            Pay Now
+          </button>
+        </Link>
       );
     case "PAID":
+      if (booking && booking.reviews.length > 0) {
+        return (
+          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-purple-700 bg-purple-100 hover:bg-purple-200 border border-purple-200 rounded-lg transition-colors cursor-pointer">
+            <CheckCheck className="w-3.5 h-3.5 fill-current" />
+            Completed
+          </button>
+        );
+      }
       return (
         <Link href={`/user-dashboard/myReview/${booking.id}`}>
           <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-purple-700 bg-purple-100 hover:bg-purple-200 border border-purple-200 rounded-lg transition-colors cursor-pointer">
@@ -29,15 +37,14 @@ export function ContextualActions({ booking }: ContextualActionsProps) {
           </button>
         </Link>
       );
+
     case "DECLINED":
       return (
         <Link href={"/services"}>
-        <button
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-100 border border-emerald-200 rounded-lg cursor-default"
-        >
-          <X className="w-3.5 h-3.5" />
-          Try Again
-        </button>
+          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-100 border border-emerald-200 rounded-lg cursor-default">
+            <X className="w-3.5 h-3.5" />
+            Try Again
+          </button>
         </Link>
       );
     case "REQUESTED":
