@@ -94,7 +94,7 @@ export function TechnicianCard({ technician, index }: TechnicianCardProps) {
             <p className="text-xs text-slate-400">Reviews</p>
 
             <p className="text-sm font-semibold text-slate-700 mt-1">
-              {technician.totalReviews}
+              {technician?.reviews?.length}
             </p>
           </div>
         </div>

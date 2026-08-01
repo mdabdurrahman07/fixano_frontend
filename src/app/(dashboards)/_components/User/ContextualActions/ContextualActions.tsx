@@ -9,6 +9,8 @@ interface ContextualActionsProps {
   booking: Booking;
 }
 
+
+
 export function ContextualActions({ booking }: ContextualActionsProps) {
   switch (booking.status) {
     case "ACCEPTED":
@@ -21,7 +23,7 @@ export function ContextualActions({ booking }: ContextualActionsProps) {
         </Link>
       );
     case "PAID":
-      if (booking && booking.reviews.length > 0) {
+      if (booking && booking?.reviews !== null) {
         return (
           <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-purple-700 bg-purple-100 hover:bg-purple-200 border border-purple-200 rounded-lg transition-colors cursor-pointer">
             <CheckCheck className="w-3.5 h-3.5 fill-current" />
@@ -41,7 +43,7 @@ export function ContextualActions({ booking }: ContextualActionsProps) {
     case "DECLINED":
       return (
         <Link href={"/services"}>
-          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-100 border border-emerald-200 rounded-lg cursor-default">
+          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-700 bg-emerald-100 border border-emerald-200 rounded-lg cursor-default">
             <X className="w-3.5 h-3.5" />
             Try Again
           </button>

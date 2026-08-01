@@ -81,7 +81,7 @@ export const TechnicianHeader: React.FC<HeaderProps> = ({ technician }) => {
                     <span>{technician.avgRating.toFixed(1)}</span>
                   </div>
                   <span className="text-sm text-slate-500 underline underline-offset-4">
-                    {technician.totalReviews} reviews
+                    {technician?.reviews?.length} reviews
                   </span>
                 </div>
               </div>

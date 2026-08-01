@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { AlertTriangle, RotateCcw, Home, Headphones, ShieldCheck } from 'lucide-react';
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
-  useEffect(() => {
-    // Log the error to an error reporting service if needed
-    console.error(error);
-  }, [error]);
+  // useEffect(() => {
+  //   // Log the error to an error reporting service if needed
+  //   console.error(error);
+  // }, [error]);
 
   return (
     <div className="bg-[#f7f9fb] text-[#191c1e] min-h-screen flex flex-col font-sans overflow-x-hidden">

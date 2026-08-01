@@ -29,7 +29,7 @@ export type FormState = {
 
 export async function addReview(
   prevState: FormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<FormState> {
   const url = process.env.BACKEND_API_URL;
   const cookieStore = await cookies();
@@ -47,6 +47,8 @@ export async function addReview(
     rating: formData.get("rating"),
     comment: formData.get("comment"),
   });
+
+  // console.log(validatedFields, "review");
 
   if (!validatedFields.success) {
     return {
@@ -68,6 +70,9 @@ export async function addReview(
 
     const data = await response.json();
 
+    console.log("Review API status:", response.status);
+    console.log("Review API response:", data);
+
     if (!response.ok) {
       return {
         success: false,
@@ -82,5 +87,6 @@ export async function addReview(
   }
 
   revalidateTag("myReviews", { expire: 0 });
+  revalidateTag("myBookings", { expire: 0 });
   redirect("/user-dashboard/myReview");
 }
