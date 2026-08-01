@@ -1,9 +1,9 @@
 import React from "react";
-import { Star} from "lucide-react";
+import { Star } from "lucide-react";
 import { Booking } from "@/app/types/types";
 import { BookingStatusBadge } from "../BookingStatusBadge/BookingStatusBadge";
 import { ContextualActions } from "../ContextualActions/ContextualActions";
-
+import Link from "next/link";
 
 interface BookingsTableProps {
   bookings: Booking[];
@@ -20,7 +20,7 @@ export function BookingsTable({ bookings }: BookingsTableProps) {
           </p>
         </div>
         <span className="text-xs font-semibold px-2.5 py-1 bg-slate-200/60 text-slate-700 rounded-md">
-          Total: {bookings.length}
+          Total: {bookings?.length}
         </span>
       </div>
 
@@ -46,12 +46,15 @@ export function BookingsTable({ bookings }: BookingsTableProps) {
               <th scope="col" className="px-6 py-3.5 text-right">
                 Actions
               </th>
+              <th scope="col" className="px-6 py-3.5 text-right">
+                Payment Status
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 bg-white">
-            {bookings.map((booking) => {
+            {bookings?.map((booking) => {
               const formattedDate = new Date(
-                booking.scheduledAt,
+                booking?.scheduledAt,
               ).toLocaleDateString("en-US", {
                 month: "short",
                 day: "numeric",
@@ -59,7 +62,7 @@ export function BookingsTable({ bookings }: BookingsTableProps) {
               });
 
               const formattedTime = new Date(
-                booking.scheduledAt,
+                booking?.scheduledAt,
               ).toLocaleTimeString("en-US", {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -67,16 +70,16 @@ export function BookingsTable({ bookings }: BookingsTableProps) {
 
               return (
                 <tr
-                  key={booking.id}
+                  key={booking?.id}
                   className="hover:bg-slate-50/80 transition-colors"
                 >
                   <td className="px-6 py-4">
                     <div className="max-w-xs">
                       <p className="font-semibold text-slate-900 truncate">
-                        {booking.service?.title}
+                        {booking?.service?.title.slice(0,22)}...
                       </p>
                       <p className="text-xs text-slate-500 truncate mt-0.5">
-                        {booking.service?.description}
+                        {booking?.service?.description.slice(0,22)}...
                       </p>
                     </div>
                   </td>
@@ -84,21 +87,21 @@ export function BookingsTable({ bookings }: BookingsTableProps) {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-semibold text-xs border border-slate-200">
-                        {booking.technician?.user?.name
-                          ? booking.technician.user.name.charAt(0)
+                        {booking?.technician?.user?.name
+                          ? booking?.technician.user.name.charAt(0)
                           : "T"}
                       </div>
                       <div>
                         <p className="text-xs font-semibold text-slate-800">
-                          {booking.technician?.user?.name ||
+                          {booking?.technician?.user?.name ||
                             "Assigned Technician"}
                         </p>
                         <div className="flex items-center gap-1 mt-0.5 text-[11px] text-slate-500">
                           <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-                          <span>{booking.technician?.avgRating ?? 0}</span>
+                          <span>{booking?.technician?.avgRating ?? 0}</span>
                           <span className="text-slate-300">•</span>
                           <span>
-                            {booking.technician?.yearsExperience ?? 0} yrs exp
+                            {booking?.technician?.yearsExperience ?? 0} yrs exp
                           </span>
                         </div>
                       </div>
@@ -116,12 +119,12 @@ export function BookingsTable({ bookings }: BookingsTableProps) {
 
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="font-bold text-slate-900 text-sm">
-                      ${parseFloat(booking.totalAmount || "0").toFixed(2)}
+                      ${parseFloat(booking?.totalAmount || "0").toFixed(2)}
                     </span>
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <BookingStatusBadge status={booking.status} />
+                    <BookingStatusBadge status={booking?.status} />
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap text-right">
@@ -131,6 +134,17 @@ export function BookingsTable({ bookings }: BookingsTableProps) {
                         <MoreVertical className="w-4 h-4" />
                       </button> */}
                     </div>
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <button disabled={booking?.status !== "PAID"}>
+                      <Link
+                        href={`/user-dashboard/paymentStatus/${booking?.id}`}
+                        className="bg-emerald-500 hover:bg-emerald-600 text-white text-md px-3.5 py-1.5 rounded-md font-medium"
+                      >
+                        Check
+                      </Link>
+                    </button>
                   </td>
                 </tr>
               );
