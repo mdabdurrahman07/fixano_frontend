@@ -74,7 +74,7 @@ export const getRoutesByRole = (role: UserRole) => {
           href: "/user-dashboard/createBooking",
           icon: PlusCircle,
         },
-        { name: "My Reviews", href: "/user-dashboard/addReview", icon: Star },
+        { name: "My Reviews", href: "/user-dashboard/myReview", icon: Star },
       ];
     default:
       return [];

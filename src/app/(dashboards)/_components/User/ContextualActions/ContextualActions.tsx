@@ -22,7 +22,7 @@ export function ContextualActions({ booking }: ContextualActionsProps) {
       );
     case "PAID":
       return (
-        <Link href={`/user-dashboard/addReview/${booking.id}`}>
+        <Link href={`/user-dashboard/myReview/${booking.id}`}>
           <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-purple-700 bg-purple-100 hover:bg-purple-200 border border-purple-200 rounded-lg transition-colors cursor-pointer">
             <Star className="w-3.5 h-3.5 fill-current" />
             Add Review
