@@ -5,12 +5,18 @@ export const createServiceSchema = z.object({
   description: z
     .string()
     .min(10, "Description must be at least 10 characters long"),
-  price: z.coerce.number().positive("Price must be greater than 0"),
+  price: z.coerce
+    .number("Please enter a valid price")
+    .positive("Price must be greater than 0"),
   durationMinutes: z.coerce
-    .number()
+    .number("Please enter duration")
     .int()
     .positive("Duration must be a positive integer"),
   categoryId: z.string().uuid("Please select a valid category"),
 });
 
-export type CreateServiceFormValues = z.infer<typeof createServiceSchema>;
+// Output type (after coercion/validation): price & durationMinutes are 'number'
+export type CreateServiceFormValues = z.output<typeof createServiceSchema>;
+
+// Input type (before coercion/validation): price & durationMinutes can be 'undefined' or 'number'
+export type CreateServiceFormInput = z.input<typeof createServiceSchema>;
