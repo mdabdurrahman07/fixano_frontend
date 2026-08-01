@@ -12,9 +12,9 @@ interface HeaderProps {
 }
 
 export const TechnicianHeader: React.FC<HeaderProps> = ({ technician }) => {
-  const name = technician.user.name || "Technician Profile";
+  const name = technician?.user?.name || "Technician Profile";
   const avatarUrl =
-    technician.avatar ||
+    technician?.avatar ||
     "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400";
 
   return (
@@ -66,22 +66,25 @@ export const TechnicianHeader: React.FC<HeaderProps> = ({ technician }) => {
                   <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
                     {name}
                   </h1>
-                  {technician.isVerified && (
+                  {technician?.isVerified && (
                     <CheckCircle2 className="w-6 h-6 text-emerald-600 fill-emerald-600/10" />
                   )}
                 </div>
 
                 <p className="text-base font-semibold text-emerald-700 dark:text-emerald-400">
-                  {technician.yearsExperience} Years Experience
+                  {technician?.yearsExperience} Years Experience
                 </p>
 
                 <div className="flex items-center justify-center md:justify-start gap-3">
                   <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 px-2.5 py-1 rounded-lg text-sm font-semibold">
                     <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                    <span>{technician.avgRating.toFixed(1)}</span>
+                    <span>{technician?.avgRating.toFixed(1)}</span>
                   </div>
                   <span className="text-sm text-slate-500 underline underline-offset-4">
-                    {technician?.reviews?.length} reviews
+                    {technician?.reviews?.length
+                      ? technician?.reviews?.length
+                      : 0}{" "}
+                    reviews
                   </span>
                 </div>
               </div>
