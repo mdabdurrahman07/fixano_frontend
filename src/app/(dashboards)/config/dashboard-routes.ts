@@ -1,6 +1,5 @@
 import { UserRole } from "@/app/types/types";
 import {
-  Users,
   CalendarDays,
   Shapes,
   PlusCircle,
@@ -8,7 +7,6 @@ import {
   User,
   Clock,
   Star,
-  CreditCard,
   LayoutDashboard,
 } from "lucide-react";
 
@@ -18,11 +16,6 @@ export const getRoutesByRole = (role: UserRole) => {
       return [
         { name: "Dashboard", href: "/admin-dashboard", icon: LayoutDashboard },
         {
-          name: "All Users",
-          href: "/admin-dashboard/getAllUsers",
-          icon: Users,
-        },
-        {
           name: "All Bookings",
           href: "/admin-dashboard/getAllBookings",
           icon: CalendarDays,
@@ -31,12 +24,7 @@ export const getRoutesByRole = (role: UserRole) => {
           name: "Categories",
           href: "/admin-dashboard/getAllCategories",
           icon: Shapes,
-        },
-        {
-          name: "Add Category",
-          href: "/admin-dashboard/addNewCategory",
-          icon: PlusCircle,
-        },
+        }
       ];
     case "TECHNICIAN":
       return [

@@ -87,7 +87,9 @@ async function DashboardContent() {
                   </TableCell>
                 </TableRow>
               ) : (
-                userList.map((user: User) => {
+                userList
+                .filter((user: User) => user.role !== "ADMIN")
+                .map((user: User) => {
                   const isBanned = user.status === "BANNED";
 
                   return (
