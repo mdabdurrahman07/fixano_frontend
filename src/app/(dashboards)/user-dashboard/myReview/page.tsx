@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getReview } from "../_userActions/getReview";
+import { DeleteReviewButton } from "../../_components/User/DeleteReviewButton/DeleteReviewButton";
+
 
 type ReviewItem = {
   id: string;
@@ -45,20 +47,23 @@ async function ReviewContent() {
               <CardTitle className="text-lg font-medium text-slate-900">
                 Review Details
               </CardTitle>
-              <div className="flex items-center gap-1 text-amber-500">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <Star
-                    key={index}
-                    className={`h-4 w-4 ${
-                      index < review.rating
-                        ? "fill-amber-400 text-amber-400"
-                        : "text-slate-300"
-                    }`}
-                  />
-                ))}
-                <span className="ml-1 text-sm font-semibold text-slate-700">
-                  {review.rating}/5
-                </span>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 text-amber-500">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <Star
+                      key={index}
+                      className={`h-4 w-4 ${
+                        index < review.rating
+                          ? "fill-amber-400 text-amber-400"
+                          : "text-slate-300"
+                      }`}
+                    />
+                  ))}
+                  <span className="ml-1 text-sm font-semibold text-slate-700">
+                    {review.rating}/5
+                  </span>
+                </div>
+                <DeleteReviewButton reviewId={review.id} />
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -128,7 +133,6 @@ export default function AddReviewPage() {
         Your review history is listed below with the date each review was submitted.
       </p>
 
-      {/* Suspense boundary wrapping the async component */}
       <Suspense fallback={<ReviewSkeleton />}>
         <ReviewContent />
       </Suspense>
