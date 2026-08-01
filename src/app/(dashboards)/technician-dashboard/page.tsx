@@ -25,7 +25,7 @@ export default function TechnicianDashboardPage() {
       <Suspense
         fallback={
           <div className="flex flex-col items-center justify-center min-h-100">
-            <Loader2 className="w-10 h-10 animate-spin text-blue-600 mb-2" />
+            <Loader2 className="w-10 h-10 animate-spin text-green-600 mb-2" />
             <p className="text-sm text-slate-500">Loading dashboard data...</p>
           </div>
         }
