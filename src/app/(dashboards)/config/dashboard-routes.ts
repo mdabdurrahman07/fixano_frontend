@@ -22,7 +22,7 @@ export const getRoutesByRole = (role: UserRole) => {
         },
         {
           name: "Categories",
-          href: "/admin-dashboard/getAllCategories",
+          href: "/admin-dashboard/Categories",
           icon: Shapes,
         }
       ];
