@@ -60,11 +60,6 @@ export const getRoutesByRole = (role: UserRole) => {
           href: "/technician-dashboard/setAvailability",
           icon: Clock,
         },
-        {
-          name: "My Bookings",
-          href: "/technician-dashboard/myBookings",
-          icon: CalendarDays,
-        },
       ];
     case "CUSTOMER":
       return [
