@@ -75,6 +75,8 @@ async function ServicesContent({
     a.name.localeCompare(b.name),
   );
 
+  
+
   return (
     <>
       <ServicesControls categories={categories} />
@@ -118,6 +120,12 @@ function ServicesSkeleton() {
     </div>
   );
 }
+
+export const metadata = {
+  title: "Services | Fixano - Revolutionizing Home Services",
+  description:
+    "Fixano is on a mission to simplify home maintenance by connecting homeowners with verified professionals.",
+};
 
 export default function ServicesPage({
   searchParams,

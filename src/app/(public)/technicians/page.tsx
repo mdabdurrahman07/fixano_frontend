@@ -3,8 +3,6 @@ import { getAllTechnicians } from "../_publicAction/getAllTechnicians";
 import { TechnicianControls } from "../_publicComponents/_technicianComponents/technician-controllers";
 import { TechniciansGrid } from "../_publicComponents/_technicianComponents/technician-grid";
 
-
-
 interface TechniciansPageProps {
   searchParams: Promise<{
     searchTerm?: string;
@@ -14,9 +12,7 @@ interface TechniciansPageProps {
   }>;
 }
 
-async function TechniciansContent({
-  searchParams,
-}: TechniciansPageProps) {
+async function TechniciansContent({ searchParams }: TechniciansPageProps) {
   const params = await searchParams;
 
   const technicianQuery = {
@@ -30,10 +26,7 @@ async function TechniciansContent({
         ? params.sortby
         : "createdAt",
 
-    sortOrder:
-      params.sortOrder === "asc"
-        ? "asc"
-        : "desc",
+    sortOrder: params.sortOrder === "asc" ? "asc" : "desc",
 
     isVerified:
       params.isVerified === undefined
@@ -41,9 +34,7 @@ async function TechniciansContent({
         : params.isVerified === "true",
   } as const;
 
-  const result = await getAllTechnicians(
-    technicianQuery,
-  );
+  const result = await getAllTechnicians(technicianQuery);
 
   const technicians = result.data;
 
@@ -59,15 +50,11 @@ async function TechniciansContent({
               <span className="font-semibold text-foreground">
                 {technicians.length}
               </span>{" "}
-              {technicians.length === 1
-                ? "technician"
-                : "technicians"}
+              {technicians.length === 1 ? "technician" : "technicians"}
             </p>
           </div>
 
-          <TechniciansGrid
-            technicians={technicians}
-          />
+          <TechniciansGrid technicians={technicians} />
         </div>
       </div>
     </>
@@ -81,26 +68,29 @@ function TechniciansSkeleton() {
         <div className="h-6 w-40 rounded-md bg-muted animate-pulse mb-6" />
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {Array.from({ length: 8 }).map(
-            (_, index) => (
-              <div
-                key={index}
-                className="h-80 rounded-2xl bg-muted animate-pulse"
-              />
-            ),
-          )}
+          {Array.from({ length: 8 }).map((_, index) => (
+            <div
+              key={index}
+              className="h-80 rounded-2xl bg-muted animate-pulse"
+            />
+          ))}
         </div>
       </div>
     </div>
   );
 }
 
+export const metadata = {
+  title: "Technicians | Fixano - Revolutionizing Home Services",
+  description:
+    "Fixano is on a mission to simplify home maintenance by connecting homeowners with verified professionals.",
+};
+
 export default function PublicTechniciansPage({
   searchParams,
 }: TechniciansPageProps) {
   return (
     <div className="min-h-screen bg-background">
-
       {/* Header */}
       <div className="border-b border-border bg-background/50 backdrop-blur">
         <div className="px-4 py-8 sm:px-6 lg:px-8">
@@ -110,17 +100,15 @@ export default function PublicTechniciansPage({
             </h1>
 
             <p className="text-muted-foreground max-w-2xl">
-              Find skilled and verified professionals
-              for your home service needs.
+              Find skilled and verified professionals for your home service
+              needs.
             </p>
           </div>
         </div>
       </div>
 
       <Suspense fallback={<TechniciansSkeleton />}>
-        <TechniciansContent
-          searchParams={searchParams}
-        />
+        <TechniciansContent searchParams={searchParams} />
       </Suspense>
     </div>
   );

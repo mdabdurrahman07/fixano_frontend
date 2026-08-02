@@ -3,8 +3,9 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { Search, ShieldCheck,ChevronDown } from "lucide-react";
+import { Search, ShieldCheck, ChevronDown} from "lucide-react";
 import Badge from "@/components/shared/Badge";
+import Link from "next/link";
 
 export function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -83,7 +84,9 @@ export function HeroSection() {
             </div>
 
             <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-xl font-medium text-sm transition-all shadow-md active:scale-95">
+              <Link href="/services">
               Search
+              </Link>
             </button>
           </div>
 

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const Cta = () => {
@@ -29,10 +30,10 @@ const Cta = () => {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button className="w-full sm:w-auto px-10 py-4 bg-white text-primary font-bold rounded-xl shadow-lg hover:bg-slate-50 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
-                Get Started Now
+                <Link href="/register">Get Started Now</Link>
               </button>
               <button className="w-full sm:w-auto px-10 py-4 bg-transparent border-2 border-white/40 text-white font-bold rounded-xl hover:bg-white/10 hover:border-white transition-all duration-300 backdrop-blur-sm">
-                Become a Technician
+                <Link href="/register">Become a Technician</Link>
               </button>
             </div>
           </div>
