@@ -252,3 +252,35 @@ export interface MyBookingResponse {
   message: string;
   data: Booking[];
 }
+
+// Categories
+
+export interface Service {
+  id: string;
+  title: string;
+  description: string;
+  price: string;
+  durationMinutes: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  technicianId: string;
+  categoryId: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  description: string;
+  iconUrl: string;
+  createdAt: string;
+  updatedAt: string;
+  services: Service[];
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: T;
+}

@@ -4,13 +4,15 @@ import { HowItWorksSection } from "./_sections/HowItWorks";
 import Cta from "./_sections/Cta";
 import { ServiceSection } from "./_sections/Service";
 import OurMission from "./_sections/OurMission";
+import CategoriesSection from "./_sections/Categories";
 const publicHome = () => {
   return (
     <div className="space-y-2">
       <HeroSection />
       <HowItWorksSection />
       <ServiceSection />
-      <OurMission/>
+      <OurMission />
+      <CategoriesSection />
       <Cta />
     </div>
   );
