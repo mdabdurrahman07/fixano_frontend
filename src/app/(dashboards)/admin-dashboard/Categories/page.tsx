@@ -69,7 +69,7 @@ async function CategoriesContent() {
                 </TableCell>
               </TableRow>
             ) : (
-              categoriesList.map((category: Category, index: number) => (
+              categoriesList?.map((category: Category, index: number) => (
                 <TableRow
                   key={category.id}
                   className="hover:bg-slate-50 transition border-b-slate-100"
@@ -82,10 +82,10 @@ async function CategoriesContent() {
                   {/* Icon */}
                   <TableCell className="py-4 px-4">
                     <div className="w-9 h-9 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden">
-                      {category.iconUrl?.startsWith("http") ? (
+                      {category.iconUrl?.startsWith("https") ? (
                         <Image
                           unoptimized
-                          src={category.iconUrl}
+                          src={category?.iconUrl}
                           alt={category.name}
                           width={24}
                           height={24}
