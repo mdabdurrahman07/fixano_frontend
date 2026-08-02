@@ -5,6 +5,7 @@ export const getAllCategories = async () => {
     cache: "force-cache",
     next: {
       revalidate: 3600,
+      tags:["allCategories"]
     },
   });
   const result = await response.json();

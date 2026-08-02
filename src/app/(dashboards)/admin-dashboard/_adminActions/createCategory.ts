@@ -34,6 +34,7 @@ export const createCategory = async (
 
     if (result?.success || response.ok) {
       revalidateTag("admin-allCategories", { expire: 0 });
+      revalidateTag("allCategories", { expire: 0 });
     }
 
     return result;
