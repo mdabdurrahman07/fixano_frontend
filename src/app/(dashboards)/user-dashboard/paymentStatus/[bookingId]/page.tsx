@@ -126,7 +126,7 @@ async function PaymentContent({ bookingId }: { bookingId: string }) {
                     <ShieldCheck className="w-4 h-4 text-slate-400" /> Base
                     Amount
                   </td>
-                  <td className="py-3.5 px-4">${amount}</td>
+                  <td className="py-3.5 px-4">${totalAmount}</td>
                 </tr>
                 <tr>
                   <td className="py-3.5 px-4 font-medium text-slate-500 flex items-center gap-2">
