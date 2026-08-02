@@ -1,4 +1,5 @@
 "use server";
+import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -25,7 +26,7 @@ export const paymentAction = async (
   });
 
   const result = await response.json();
-
+  revalidateTag("myBookings", { expire: 0 });
   if (result.success && result.data.url) {
     redirect(result.data.url);
   }
