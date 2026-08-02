@@ -1,5 +1,5 @@
 import React from "react";
-import { Star } from "lucide-react";
+import { EllipsisVertical, Star } from "lucide-react";
 import { Booking } from "@/app/types/types";
 import { BookingStatusBadge } from "../BookingStatusBadge/BookingStatusBadge";
 import { ContextualActions } from "../ContextualActions/ContextualActions";
@@ -76,10 +76,10 @@ export function BookingsTable({ bookings }: BookingsTableProps) {
                   <td className="px-6 py-4">
                     <div className="max-w-xs">
                       <p className="font-semibold text-slate-900 truncate">
-                        {booking?.service?.title.slice(0,22)}...
+                        {booking?.service?.title.slice(0, 22)}...
                       </p>
                       <p className="text-xs text-slate-500 truncate mt-0.5">
-                        {booking?.service?.description.slice(0,22)}...
+                        {booking?.service?.description.slice(0, 22)}...
                       </p>
                     </div>
                   </td>
@@ -137,14 +137,18 @@ export function BookingsTable({ bookings }: BookingsTableProps) {
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <button disabled={booking?.status !== "PAID"}>
-                      <Link
-                        href={`/user-dashboard/paymentStatus/${booking?.id}`}
-                        className="bg-emerald-500 hover:bg-emerald-600 text-white text-md px-3.5 py-1.5 rounded-md font-medium"
-                      >
-                        Check
-                      </Link>
-                    </button>
+                    {booking?.status !== "PAID" ? (
+                      <EllipsisVertical />
+                    ) : (
+                      <button>
+                        <Link
+                          href={`/user-dashboard/paymentStatus/${booking?.id}`}
+                          className="bg-emerald-500 hover:bg-emerald-600 text-white text-md px-3.5 py-1.5 rounded-md font-medium"
+                        >
+                          Check
+                        </Link>
+                      </button>
+                    )}
                   </td>
                 </tr>
               );

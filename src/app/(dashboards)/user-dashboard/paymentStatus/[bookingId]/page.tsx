@@ -31,7 +31,7 @@ async function PaymentContent({ bookingId }: { bookingId: string }) {
             "We couldn't retrieve the payment status for this booking."}
         </p>
         <Link
-          href="/dashboard"
+          href="/user-dashboard"
           className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 transition-colors"
         >
           Return to Dashboard
