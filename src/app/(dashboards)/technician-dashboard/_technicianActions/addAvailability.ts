@@ -36,6 +36,8 @@ export async function setAvailabilityAction(
       revalidateTag("all-Technicians", {expire: 0});
       revalidateTag("technicianProfile", {expire: 0});
       revalidateTag("all-Services", {expire: 0});
+      revalidateTag("allServices", {expire: 0});
+      revalidateTag("allTechnicians", {expire: 0});
     }
 
     return result;

@@ -1,12 +1,17 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { Star, MessageSquareQuote, User, Wrench, CalendarDays } from "lucide-react";
+import {
+  Star,
+  MessageSquareQuote,
+  User,
+  Wrench,
+  CalendarDays,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getReview } from "../_userActions/getReview";
 import { DeleteReviewButton } from "../../_components/User/DeleteReviewButton/DeleteReviewButton";
-
 
 type ReviewItem = {
   id: string;
@@ -20,7 +25,11 @@ type ReviewItem = {
 async function ReviewContent() {
   const result = await getReview();
 
-  if (!result?.success || !Array.isArray(result?.data) || result.data.length === 0) {
+  if (
+    !result?.success ||
+    !Array.isArray(result?.data) ||
+    result.data.length === 0
+  ) {
     return (
       <div className="mt-6 text-center text-sm text-slate-500">
         No review found.
@@ -31,7 +40,7 @@ async function ReviewContent() {
   const reviews = result.data as ReviewItem[];
 
   return (
-    <div className="mt-6 space-y-4">
+    <div className="mt-6 space-y-6">
       {reviews.map((review) => {
         const formattedDate = review.createdAt
           ? new Date(review.createdAt).toLocaleDateString("en-US", {
@@ -83,7 +92,9 @@ async function ReviewContent() {
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4 text-slate-400" />
                   <div>
-                    <span className="block font-medium text-slate-500">Customer</span>
+                    <span className="block font-medium text-slate-500">
+                      Customer
+                    </span>
                     <span className="text-sm font-semibold text-slate-800">
                       {review.customer?.name ?? "N/A"}
                     </span>
@@ -92,7 +103,9 @@ async function ReviewContent() {
                 <div className="flex items-center gap-2">
                   <Wrench className="h-4 w-4 text-slate-400" />
                   <div>
-                    <span className="block font-medium text-slate-500">Technician</span>
+                    <span className="block font-medium text-slate-500">
+                      Technician
+                    </span>
                     <span className="text-sm font-semibold text-slate-800">
                       {review.technician?.user?.name ?? "N/A"}
                     </span>
@@ -130,7 +143,8 @@ export default function AddReviewPage() {
     <div className="p-6">
       <h1 className="text-xl font-semibold text-slate-900">My Reviews</h1>
       <p className="mt-2 text-sm text-slate-600">
-        Your review history is listed below with the date each review was submitted.
+        Your review history is listed below with the date each review was
+        submitted.
       </p>
 
       <Suspense fallback={<ReviewSkeleton />}>

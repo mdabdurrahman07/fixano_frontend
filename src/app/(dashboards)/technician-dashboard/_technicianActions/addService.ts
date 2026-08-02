@@ -30,6 +30,7 @@ export async function createServiceAction(data: CreateServiceInput) {
 
     if (result.success) {
       revalidateTag("all-Services", { expire: 0 });
+      revalidateTag("allServices", { expire: 0 });
     }
 
     return result;

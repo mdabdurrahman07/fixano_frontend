@@ -88,5 +88,7 @@ export async function addReview(
 
   revalidateTag("myReviews", { expire: 0 });
   revalidateTag("myBookings", { expire: 0 });
+  revalidateTag("allTechnicians", { expire: 0 });
+  revalidateTag("singleTechnician", { expire: 0 });
   redirect("/user-dashboard/myReview");
 }
