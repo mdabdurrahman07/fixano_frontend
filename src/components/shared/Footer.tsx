@@ -70,7 +70,7 @@ export function Footer() {
             </li>
             <li>
               <Link
-                href="/auth/register?role=technician"
+                href="/register"
                 className="hover:text-emerald-600 transition-colors"
               >
                 Become a Technician
