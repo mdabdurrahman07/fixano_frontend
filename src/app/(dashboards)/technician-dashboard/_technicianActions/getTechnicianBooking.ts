@@ -23,7 +23,7 @@ export const getTechnicianBookings = async (): Promise<
         "Content-Type": "application/json",
         Cookie: `accessToken=${accessToken}`,
       },
-      next: { tags: ["technician-bookings"] },
+      next: {revalidate: 3600 , tags:["technician-bookings"]},
     });
 
     const result = await response.json();

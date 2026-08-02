@@ -1,5 +1,5 @@
 export type BookingStatus = 
-  | "PENDING" 
+  | "REQUESTED" 
   | "ACCEPTED" 
   | "IN_PROGRESS" 
   | "PAID" 

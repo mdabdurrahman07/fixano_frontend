@@ -29,11 +29,11 @@ export default function DashboardClient({
   );
 
   // Compute Metrics
-  const completedBookings = bookings.filter(
+  const completedBookings = bookings?.filter(
     (b) => b.status === "COMPLETED" || b.status === "PAID",
   );
 
-  const pendingOrActiveBookings = bookings.filter(
+  const pendingOrActiveBookings = bookings?.filter(
     (b) =>
       b.status !== "COMPLETED" &&
       b.status !== "DECLINED" &&
@@ -45,10 +45,8 @@ export default function DashboardClient({
     0,
   );
 
-  const upcomingJobsCount = completedBookings
-    ? 0
-    : pendingOrActiveBookings.length;
-  const completedJobsCount = completedBookings.length;
+  const upcomingJobsCount = bookings?.filter((b) => b.status === "REQUESTED" )
+  const completedJobsCount = completedBookings?.length;
 
   // Handle Accept / Decline Action
   const handleStatusChange = async (
@@ -59,7 +57,7 @@ export default function DashboardClient({
 
     // Optimistic UI update to remove action buttons immediately
     setBookings((prev) =>
-      prev.map((item) =>
+      prev?.map((item) =>
         item.id === bookingId
           ? {
               ...item,
@@ -83,10 +81,10 @@ export default function DashboardClient({
   // Helper for status badge styles
   const renderStatusBadge = (status: string) => {
     switch (status) {
-      case "PENDING":
+      case "REQUESTED":
         return (
           <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-800">
-            Pending
+            REQUESTED
           </span>
         );
       case "ACCEPTED":
@@ -144,7 +142,7 @@ export default function DashboardClient({
           <div>
             <p className="text-sm font-medium text-slate-500">Upcoming Jobs</p>
             <h3 className="text-3xl font-bold text-slate-900 mt-1">
-              {upcomingJobsCount}
+              {upcomingJobsCount?.length}
             </h3>
           </div>
           <div className="p-3 bg-blue-50 rounded-lg text-blue-600">
@@ -193,7 +191,7 @@ export default function DashboardClient({
                 </tr>
               ) : (
                 pendingOrActiveBookings.map((job) => {
-                  const isPendingStatus = job.status === "PENDING";
+                  const isPendingStatus = job.status === "REQUESTED";
                   const isProcessing =
                     activeProcessingId === job.id && isPending;
 
